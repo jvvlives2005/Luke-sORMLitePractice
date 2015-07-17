@@ -23,18 +23,20 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper{
 
     //sunchronize mean that it will run on piece at a time --only getting 1 instance of the Helper
     public static synchronized DatabaseHelper getInstance (Context context){
+
         if(mHelper == null) {
             mHelper = new DatabaseHelper(context.getApplicationContext());
         }
         return mHelper;
     }
 
-     public  DatabaseHelper(Context context){
+    public DatabaseHelper(Context context) {
         super(context, MYDB, null, VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase database, ConnectionSource connectionSource) {
+
         try {
             TableUtils.createTable(connectionSource, AccessCoder.class);
         } catch (SQLException e) {
@@ -44,24 +46,24 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper{
 
     @Override
     public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion) {
+
+
         try {
             TableUtils.dropTable(connectionSource, AccessCoder.class, true);
+            onCreate(database, connectionSource);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void insertRow (int picture, String name, String gender){
+    public void insertRow(int picture, String name, String gender) throws SQLException {
         AccessCoder coder = new AccessCoder(picture, name, gender);
         getDao(AccessCoder.class).create(coder);
-
     }
 
-    public List<AccessCoder> loadData(){
-        try {
-            return getDao(AccessCoder.class).queryForAll();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public List<AccessCoder> loadData() throws SQLException {
+        return getDao(AccessCoder.class).queryForAll();
     }
 }
+

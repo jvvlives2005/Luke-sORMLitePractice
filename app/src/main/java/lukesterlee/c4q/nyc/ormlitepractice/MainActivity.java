@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.widget.ListView;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import butterknife.Bind;
@@ -16,6 +17,8 @@ public class MainActivity extends ActionBarActivity {
     //private ListView mListView;
 
     @Bind(R.id.listView) ListView mListView;
+    private AccessCoderAdapter mAdapter;
+
     private DatabaseHelper mHelper;
 
     @Override
@@ -23,14 +26,16 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
        // mListView = (ListView) findViewById(R.id.listView);
 
         ButterKnife.bind(this);
+
         new DatabaseTask().execute();
 
     }
 
-    private class DatabaseTask extends AsyncTask <Void, Void, List<AccessCoder>> {
+    private class DatabaseTask extends AsyncTask<Void, Void, List<AccessCoder>> {
 
         @Override
         protected List<AccessCoder> doInBackground(Void... params) {
@@ -40,17 +45,25 @@ public class MainActivity extends ActionBarActivity {
             try {
                 if (mHelper.loadData().size() == 0) {
                     mHelper.insertRow(R.drawable.allison, "Allison", "Female");
+                    mHelper.insertRow(R.drawable.alvin, "Alvin", "Male");
+                    mHelper.insertRow(R.drawable.charlyn, "Charlyn", "Female");
                 }
-            }
                 return mHelper.loadData();
 
 
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            return null;
 
         }
 
         @Override
         protected void onPostExecute(List<AccessCoder> accessCoders) {
-            super.onPostExecute(accessCoders);
+
+            mAdapter = new AccessCoderAdapter(MainActivity.this, accessCoders);
+            mListView.setAdapter(mAdapter);
         }
     }
 

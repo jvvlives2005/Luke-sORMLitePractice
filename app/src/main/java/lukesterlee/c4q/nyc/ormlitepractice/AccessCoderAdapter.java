@@ -19,6 +19,7 @@ import butterknife.ButterKnife;
  * Created by c4q-joshelynvivas on 7/16/15.
  */
 public class AccessCoderAdapter extends BaseAdapter{
+
     private Context mContext;
     private List<AccessCoder> mList;
     private LayoutInflater mInflater;
@@ -31,8 +32,6 @@ public class AccessCoderAdapter extends BaseAdapter{
         this.mContext = mContext;
         this.mList = mList;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-
     }
 
     @Override
@@ -55,12 +54,16 @@ public class AccessCoderAdapter extends BaseAdapter{
 
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.list_item_access_coders,parent,false);
+
         }
 
         ButterKnife.bind(this, convertView);
 
-        Picasso.with(mContext).load(getItem(position).getPicture()).resize(200, 200).centerCrop())
+        Picasso.with(mContext).load(getItem(position).getPicture()).resize(200, 200).centerCrop().into(mImageView);
+        mTextViewName.setText(getItem(position).getName());
+        mTextViewGender.setText(getItem(position).getGender());
 
-        return null;
+        return convertView;
+
     }
 }

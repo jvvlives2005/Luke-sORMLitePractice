@@ -1,5 +1,6 @@
 package lukesterlee.c4q.nyc.ormlitepractice;
 
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -14,11 +15,11 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable
 public class AccessCoder {
 
-    @DatabaseField (id = true)
+    @DatabaseField(generatedId = true)
     private int id;
 
     @DatabaseField
-    private Integer picture;
+    private int picture;
 
     @DatabaseField
     private String name;
@@ -26,14 +27,15 @@ public class AccessCoder {
     @DatabaseField
     private String gender;
 
-    public AccessCoder(){
+
+    public AccessCoder() {
 
     }
 
     public AccessCoder(int picture, String name, String gender) {
+        this.gender = gender;
         this.name = name;
         this.picture = picture;
-        this.gender = gender;
     }
 
     public int getId() {
@@ -44,9 +46,6 @@ public class AccessCoder {
         this.id = id;
     }
 
-    public Integer getPicture() {
-        return picture;
-    }
 
     public void setPicture(Integer picture) {
         this.picture = picture;
@@ -67,4 +66,14 @@ public class AccessCoder {
     public void setName(String name) {
         this.name = name;
     }
+
+
+    public int getPicture() {
+        return picture;
+    }
+
+    public void setPicture(int picture) {
+        this.picture = picture;
+    }
+
 }
