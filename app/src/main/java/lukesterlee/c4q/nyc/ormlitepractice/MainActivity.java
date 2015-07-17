@@ -1,38 +1,58 @@
 package lukesterlee.c4q.nyc.ormlitepractice;
 
-import android.support.v7.app.ActionBarActivity;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.app.ActionBarActivity;
+import android.widget.ListView;
+
+import java.util.List;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 
 public class MainActivity extends ActionBarActivity {
+
+    //private ListView mListView;
+
+    @Bind(R.id.listView) ListView mListView;
+    private DatabaseHelper mHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+       // mListView = (ListView) findViewById(R.id.listView);
+
+        ButterKnife.bind(this);
+        new DatabaseTask().execute();
+
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
+    private class DatabaseTask extends AsyncTask <Void, Void, List<AccessCoder>> {
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        @Override
+        protected List<AccessCoder> doInBackground(Void... params) {
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            mHelper = DatabaseHelper.getInstance(getApplicationContext());
+
+            try {
+                if (mHelper.loadData().size() == 0) {
+                    mHelper.insertRow(R.drawable.allison, "Allison", "Female");
+                }
+            }
+                return mHelper.loadData();
+
+
+
         }
 
-        return super.onOptionsItemSelected(item);
+        @Override
+        protected void onPostExecute(List<AccessCoder> accessCoders) {
+            super.onPostExecute(accessCoders);
+        }
     }
+
+
 }
